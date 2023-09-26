@@ -55,18 +55,17 @@ class BinarySearchTree:
         return height
 
     def search(self, value: int, node: Node | None = None):
-        _node = self.root if node is None else node
-        if _node.value == value:
-            return BinarySearchTree(node=_node)
-        elif _node.value > value:
-            if _node.left is None:
-                raise ValueError()
+        node = self.root
+        while node is not None and node.value != value:
             # go to the left
-            return self.search(value, _node.left)
-        if _node.right is None:
+            if node.value > value:
+                node = node.left
+            # go to the right
+            elif node.value < value:
+                node = node.right
+        if node is None:
             raise ValueError()
-        # go to the right
-        return self.search(value, _node.right)
+        return BinarySearchTree(node=node)
 
     def degree_traversal(self):
         queue = [self.root]
