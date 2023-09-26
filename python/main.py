@@ -77,11 +77,13 @@ class BinarySearchTree:
             if node.right is not None:
                 queue.append(node.right)
 
-    def max(self, node: Node | None = None):
-        _node = self.root if node is None else node
-        _max = _node.value
-        if _node.right is not None:
-            _max = self.max(_node.right)
+    def max(self):
+        node = self.root
+        _max = None
+        while node is not None:
+            if node.right is None:
+                _max = node.value
+            node = node.right
         return _max
 
     def min(self, node: Node | None = None):
