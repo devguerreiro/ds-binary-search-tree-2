@@ -39,20 +39,19 @@ class BinarySearchTree:
         else:
             parent_node.right = new_node
 
-    def get_node_height(self, value: int, node: Node | None = None):
-        _node = self.root if node is None else node
-        if _node.value == value:
-            return 0
-        elif _node.value > value:
-            if _node.left is None:
-                raise ValueError()
+    def get_node_height(self, value: int):
+        node = self.root
+        height = 0
+        while node is not None and node.value != value:
             # go to the left
-            height = self.get_node_height(value, _node.left) + 1
-        elif _node.value < value:
-            if _node.right is None:
-                raise ValueError()
+            if node.value > value:
+                node = node.left
             # go to the right
-            height = self.get_node_height(value, _node.right) + 1
+            elif node.value < value:
+                node = node.right
+            height += 1
+        if node is None:
+            raise ValueError()
         return height
 
     def search(self, value: int, node: Node | None = None):
