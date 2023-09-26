@@ -86,46 +86,58 @@ class BinarySearchTree:
             node = node.right
         return _max
 
-    def min(self):
-        node = self.root
+    def min(self, node: Node | None = None):
+        _node = self.root if node is None else node
         _min = None
-        while node is not None:
-            if node.left is None:
-                _min = node.value
-            node = node.left
+        while _node is not None:
+            if _node.left is None:
+                _min = _node.value
+            _node = _node.left
         return _min
 
-    def remove(
-        self,
-        value: int,
-        node: Node | None = None,
-    ):
-        _node = self.root if node is None else node
-        # go to the left
-        if _node.value > value:
-            if _node.left is None:
+    def remove(self, value: int):
+        parent_node = self.root
+        parent_direction = ""
+        queue = [self.root]
+        while len(queue) > 0:
+            if queue:
+                node = queue.pop(0)
+            if node is None:
                 raise ValueError()
-            _node.left = self.remove(value, _node.left)
-        # go to the right
-        elif _node.value < value:
-            if _node.right is None:
-                raise ValueError()
-            _node.right = self.remove(value, _node.right)
-        # first case, where node is a leaf
-        elif _node.left is None and _node.right is None:
-            return None
-        # second case, where node hasn't left
-        elif _node.left is None:
-            return _node.right
-        # second case, where node hasn't right
-        elif _node.right is None:
-            return _node.left
-        # third case, where node has both left and right
-        else:
-            successor = self.min(_node.right)
-            _node.value = successor
-            _node.right = self.remove(successor, _node.right)
-        return _node
+            # go to the left
+            if node.value > value:
+                parent_node = node
+                queue.append(node.left)
+                parent_direction = "left"
+            # go to the right
+            elif node.value < value:
+                parent_node = node
+                queue.append(node.right)
+                parent_direction = "right"
+            # first case where node is a leaf
+            elif node.right is None and node.left is None:
+                if parent_direction == "left":
+                    parent_node.left = None
+                else:
+                    parent_node.right = None
+            # second case where node has only one child
+            elif node.left is None:
+                if parent_direction == "left":
+                    parent_node.left = node.right
+                else:
+                    parent_node.right = node.right
+            # second case where node has only one child
+            elif node.right is None:
+                if parent_direction == "left":
+                    parent_node.left = node.left
+                else:
+                    parent_node.right = node.left
+            # third case where node has both children
+            else:
+                successor = self.min(node.right)
+                node.value = successor
+                value = successor
+                queue.append(node.right)
 
 
 if __name__ == "__main__":
@@ -213,27 +225,27 @@ if __name__ == "__main__":
 
         return bst
 
-    # # remove leaf
-    # bst = make_bst()
-    # bst.remove(1)
-    # assert bst.root.left.left is None
+    # remove leaf
+    bst = make_bst()
+    bst.remove(1)
+    assert bst.root.left.left is None
 
-    # # remove node with one child
-    # bst = make_bst()
-    # bst.remove(10)
-    # assert bst.root.right.value == 14
+    # remove node with one child
+    bst = make_bst()
+    bst.remove(10)
+    assert bst.root.right.value == 14
 
-    # # remove root node
-    # bst = make_bst()
-    # bst.remove(8)
-    # assert bst.root.value == 10
-    # assert bst.root.left.value == 3
-    # assert bst.root.right.value == 14
+    # remove root node
+    bst = make_bst()
+    bst.remove(8)
+    assert bst.root.value == 10
+    assert bst.root.left.value == 3
+    assert bst.root.right.value == 14
 
-    # # remove inexistent node
-    # bst = make_bst()
-    # try:
-    #     bst.remove(-100)
-    #     raise AssertionError
-    # except Exception as e:
-    #     assert isinstance(e, ValueError)
+    # remove inexistent node
+    bst = make_bst()
+    try:
+        bst.remove(-100)
+        raise AssertionError
+    except Exception as e:
+        assert isinstance(e, ValueError)
