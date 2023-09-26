@@ -67,7 +67,7 @@ class BinarySearchTree:
             raise ValueError()
         return BinarySearchTree(node=node)
 
-    def degree_traversal(self):
+    def level_order_traversal(self):
         queue = [self.root]
         while len(queue) > 0:
             node = queue.pop(0)
@@ -100,8 +100,7 @@ class BinarySearchTree:
         parent_direction = ""
         queue = [self.root]
         while len(queue) > 0:
-            if queue:
-                node = queue.pop(0)
+            node = queue.pop(0)
             if node is None:
                 raise ValueError()
             # go to the left
@@ -203,7 +202,7 @@ if __name__ == "__main__":
         assert isinstance(e, ValueError)
 
     # degree traversal
-    binary_search_tree.degree_traversal()
+    binary_search_tree.level_order_traversal()
 
     # max value in the three
     assert binary_search_tree.max() == 80
