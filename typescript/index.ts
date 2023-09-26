@@ -93,13 +93,16 @@ class BinarySearchTree {
         }
     }
 
-    max(node: Node | null = null) {
-        const _node = node === null ? this.root : node;
-        let max = _node.value;
-        if (_node.right !== null) {
-            max = this.max(_node.right);
+    max() {
+        let node: Node | null = this.root;
+        let _max: number | null = null;
+        while (node !== null) {
+            if (node.right == null) {
+                _max = node.value;
+            }
+            node = node.right;
         }
-        return max;
+        return _max;
     }
 
     min(node: Node | null = null) {
