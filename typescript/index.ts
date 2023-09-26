@@ -117,41 +117,60 @@ class BinarySearchTree {
         return _min;
     }
 
-    // remove(value: number, node: Node | null = null) {
-    //     const _node = node === null ? this.root : node;
-    //     // go to the left
-    //     if (_node.value > value) {
-    //         if (_node.left === null) {
-    //             throw new Error();
-    //         }
-    //         _node.left = this.remove(value, _node.left);
-    //     }
-    //     // go to the right
-    //     else if (_node.value < value) {
-    //         if (_node.right === null) {
-    //             throw new Error();
-    //         }
-    //         _node.right = this.remove(value, _node.right);
-    //     }
-    //     // first case, where node is a leaf
-    //     else if (_node.left === null && _node.right === null) {
-    //         return null;
-    //     }
-    //     // second case, where node hasn't left
-    //     else if (_node.left == null) {
-    //         return _node.right;
-    //     } // second case, where node hasn't right
-    //     else if (_node.right == null) {
-    //         return _node.left;
-    //     }
-    //     // third case, where node has both left and right
-    //     else {
-    //         const successor = this.min(_node.right);
-    //         _node.value = successor;
-    //         _node.right = this.remove(successor, _node.right);
-    //     }
-    //     return _node;
-    // }
+    remove(value: number) {
+        let parentNode = this.root;
+        let parentDirection = "";
+        const queue: [Node | null] = [this.root];
+        while (queue.length > 0) {
+            let node = queue.shift();
+            if (node == null) {
+                throw new Error();
+            }
+            // go to the left
+            if (node.value > value) {
+                parentNode = node;
+                queue.push(node.left);
+                parentDirection = "left";
+            }
+            // go to the right
+            else if (node.value < value) {
+                parentNode = node;
+                queue.push(node.right);
+                parentDirection = "right";
+            }
+            // first case where node is a leaf
+            else if (node.right === null && node.left === null) {
+                if (parentDirection === "left") {
+                    parentNode.left = null;
+                } else {
+                    parentNode.right = null;
+                }
+            }
+            // second case where node has only one child
+            else if (node.left === null) {
+                if (parentDirection === "left") {
+                    parentNode.left = node.right;
+                } else {
+                    parentNode.right = node.right;
+                }
+            }
+            // second case where node has only one child
+            else if (node.right === null) {
+                if (parentDirection === "left") {
+                    parentNode.left = node.left;
+                } else {
+                    parentNode.right = node.left;
+                }
+            }
+            // third case where node has both children
+            else {
+                const successor = this.min(node.right) as number;
+                node.value = successor;
+                value = successor;
+                queue.push(node.right);
+            }
+        }
+    }
 }
 
 const binarySearchTree = new BinarySearchTree(50);
@@ -233,25 +252,25 @@ function makeBst() {
 
 let bst: BinarySearchTree;
 
-// // remove leaf
-// bst = makeBst();
-// bst.remove(1);
-// assert.equal((bst.root.left as Node).left, null);
+// remove leaf
+bst = makeBst();
+bst.remove(1);
+assert.equal((bst.root.left as Node).left, null);
 
-// // remove node with one child
-// bst = makeBst();
-// bst.remove(10);
-// assert.equal((bst.root.right as Node).value, 14);
+// remove node with one child
+bst = makeBst();
+bst.remove(10);
+assert.equal((bst.root.right as Node).value, 14);
 
-// // remove root node
-// bst = makeBst();
-// bst.remove(8);
-// assert.equal(bst.root.value, 10);
-// assert.equal((bst.root.left as Node).value, 3);
-// assert.equal((bst.root.right as Node).value, 14);
+// remove root node
+bst = makeBst();
+bst.remove(8);
+assert.equal(bst.root.value, 10);
+assert.equal((bst.root.left as Node).value, 3);
+assert.equal((bst.root.right as Node).value, 14);
 
-// // remove inexistent node
-// bst = makeBst();
-// assert.throws(() => bst.remove(-100), Error);
+// remove inexistent node
+bst = makeBst();
+assert.throws(() => bst.remove(-100), Error);
 
 export default {};
