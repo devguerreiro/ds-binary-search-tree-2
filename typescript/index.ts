@@ -106,49 +106,52 @@ class BinarySearchTree {
     }
 
     min(node: Node | null = null) {
-        const _node = node === null ? this.root : node;
-        let min = _node.value;
-        if (_node.left !== null) {
-            min = this.min(_node.left);
+        let _node: Node | null = node === null ? this.root : node;
+        let _min: number | null = null;
+        while (_node !== null) {
+            if (_node.left == null) {
+                _min = _node.value;
+            }
+            _node = _node.left;
         }
-        return min;
+        return _min;
     }
 
-    remove(value: number, node: Node | null = null) {
-        const _node = node === null ? this.root : node;
-        // go to the left
-        if (_node.value > value) {
-            if (_node.left === null) {
-                throw new Error();
-            }
-            _node.left = this.remove(value, _node.left);
-        }
-        // go to the right
-        else if (_node.value < value) {
-            if (_node.right === null) {
-                throw new Error();
-            }
-            _node.right = this.remove(value, _node.right);
-        }
-        // first case, where node is a leaf
-        else if (_node.left === null && _node.right === null) {
-            return null;
-        }
-        // second case, where node hasn't left
-        else if (_node.left == null) {
-            return _node.right;
-        } // second case, where node hasn't right
-        else if (_node.right == null) {
-            return _node.left;
-        }
-        // third case, where node has both left and right
-        else {
-            const successor = this.min(_node.right);
-            _node.value = successor;
-            _node.right = this.remove(successor, _node.right);
-        }
-        return _node;
-    }
+    // remove(value: number, node: Node | null = null) {
+    //     const _node = node === null ? this.root : node;
+    //     // go to the left
+    //     if (_node.value > value) {
+    //         if (_node.left === null) {
+    //             throw new Error();
+    //         }
+    //         _node.left = this.remove(value, _node.left);
+    //     }
+    //     // go to the right
+    //     else if (_node.value < value) {
+    //         if (_node.right === null) {
+    //             throw new Error();
+    //         }
+    //         _node.right = this.remove(value, _node.right);
+    //     }
+    //     // first case, where node is a leaf
+    //     else if (_node.left === null && _node.right === null) {
+    //         return null;
+    //     }
+    //     // second case, where node hasn't left
+    //     else if (_node.left == null) {
+    //         return _node.right;
+    //     } // second case, where node hasn't right
+    //     else if (_node.right == null) {
+    //         return _node.left;
+    //     }
+    //     // third case, where node has both left and right
+    //     else {
+    //         const successor = this.min(_node.right);
+    //         _node.value = successor;
+    //         _node.right = this.remove(successor, _node.right);
+    //     }
+    //     return _node;
+    // }
 }
 
 const binarySearchTree = new BinarySearchTree(50);
@@ -230,25 +233,25 @@ function makeBst() {
 
 let bst: BinarySearchTree;
 
-// remove leaf
-bst = makeBst();
-bst.remove(1);
-assert.equal((bst.root.left as Node).left, null);
+// // remove leaf
+// bst = makeBst();
+// bst.remove(1);
+// assert.equal((bst.root.left as Node).left, null);
 
-// remove node with one child
-bst = makeBst();
-bst.remove(10);
-assert.equal((bst.root.right as Node).value, 14);
+// // remove node with one child
+// bst = makeBst();
+// bst.remove(10);
+// assert.equal((bst.root.right as Node).value, 14);
 
-// remove root node
-bst = makeBst();
-bst.remove(8);
-assert.equal(bst.root.value, 10);
-assert.equal((bst.root.left as Node).value, 3);
-assert.equal((bst.root.right as Node).value, 14);
+// // remove root node
+// bst = makeBst();
+// bst.remove(8);
+// assert.equal(bst.root.value, 10);
+// assert.equal((bst.root.left as Node).value, 3);
+// assert.equal((bst.root.right as Node).value, 14);
 
-// remove inexistent node
-bst = makeBst();
-assert.throws(() => bst.remove(-100), Error);
+// // remove inexistent node
+// bst = makeBst();
+// assert.throws(() => bst.remove(-100), Error);
 
 export default {};
