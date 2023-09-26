@@ -63,27 +63,20 @@ class BinarySearchTree {
         return height;
     }
 
-    search(
-        value: number,
-        node: Node | null = null
-    ): BinarySearchTree | undefined {
-        let _node = node === null ? this.root : node;
-        if (_node.value === value) {
-            return new BinarySearchTree(_node);
-        }
-        if (_node.value > value) {
-            if (_node.left === null) {
-                throw new Error();
-            }
+    search(value: number): BinarySearchTree | undefined {
+        let node: Node | null = this.root;
+        while (node !== null && node.value !== value) {
             // go to the left
-            return this.search(value, _node.left);
-        } else if (_node.value < value) {
-            if (_node.right === null) {
-                throw new Error();
+            if (node.value > value) {
+                node = node.left;
+            } else if (node.value < value) {
+                node = node.right;
             }
-            // go to the right
-            return this.search(value, _node.right);
         }
+        if (node === null) {
+            throw new Error();
+        }
+        return new BinarySearchTree(node);
     }
 
     degreeTraversal() {
