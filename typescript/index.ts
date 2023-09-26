@@ -43,24 +43,22 @@ class BinarySearchTree {
         }
     }
 
-    getNodeHeight(value: number, node: Node | null = null) {
+    getNodeHeight(value: number) {
+        let node: Node | null = this.root;
         let height = 0;
-        let _node = node === null ? this.root : node;
-        if (_node.value === value) {
-            height = 0;
-        }
-        if (_node.value > value) {
-            if (_node.left === null) {
-                throw new Error();
-            }
+        while (node !== null && node.value !== value) {
             // go to the left
-            height = this.getNodeHeight(value, _node.left) + 1;
-        } else if (_node.value < value) {
-            if (_node.right === null) {
-                throw new Error();
+            if (node.value > value) {
+                node = node.left;
             }
             // go to the right
-            height = this.getNodeHeight(value, _node.right) + 1;
+            else if (node.value < value) {
+                node = node.right;
+            }
+            height += 1;
+        }
+        if (node === null) {
+            throw new Error();
         }
         return height;
     }
