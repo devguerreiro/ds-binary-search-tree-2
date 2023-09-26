@@ -79,11 +79,11 @@ class BinarySearchTree {
         return new BinarySearchTree(node);
     }
 
-    degreeTraversal() {
+    levelOrderTraversal() {
         const queue = [this.root];
         while (queue.length > 0) {
-            const node = queue.shift() as Node;
-            process.stdout.write(node?.value + "->");
+            let node = queue.shift() as Node;
+            process.stdout.write(node.value + "->");
             if (node.left !== null) {
                 queue.push(node.left);
             }
@@ -202,7 +202,7 @@ assert.equal((subBinarySearchTree?.root.right as Node).value, 40);
 assert.throws(() => binarySearchTree.search(-100), Error);
 
 // degree traversal
-binarySearchTree.degreeTraversal();
+binarySearchTree.levelOrderTraversal();
 
 // max value in the tree
 assert.equal(binarySearchTree.max(), 80);
